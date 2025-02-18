@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1099189354162",
+    "project_id": "flutter-firebase-kilian",
+    "storage_bucket": "flutter-firebase-kilian.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1099189354162:android:d1f95466ee6b30191cd3ab",
+        "android_client_info": {
+          "package_name": "com.example.ejemplo_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDz5R-MbTNGyyLhr-e16IzRd1QfHYPzSa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
