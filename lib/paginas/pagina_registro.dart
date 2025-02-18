@@ -1,3 +1,4 @@
+import 'package:ejemplo_firebase/auth/servicio_auth.dart';
 import 'package:ejemplo_firebase/componentes/boton_auth.dart';
 import 'package:ejemplo_firebase/componentes/text_field_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,9 @@ class PaginaRegistro extends StatelessWidget {
   const PaginaRegistro({super.key});
 
   void Registro(){
+    final ServicioAuth servicioAuth = ServicioAuth();
 
+    servicioAuth.registroConEmailyPassword("email1@email.com", "123456");
   }
 
   @override
@@ -132,9 +135,12 @@ class PaginaRegistro extends StatelessWidget {
                 const SizedBox(height: 10),
             
                 //Botón registrate
-                BotonAuth(
-                  texto: "Registrate",
-                  onTap: Registro
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: BotonAuth(
+                    texto: "Registrarse",
+                    onTap: Registro
+                  ),
                 ),
 
                 BotonAuth(
