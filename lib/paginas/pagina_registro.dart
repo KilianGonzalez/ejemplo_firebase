@@ -6,10 +6,28 @@ import 'package:flutter/material.dart';
 class PaginaRegistro extends StatelessWidget {
   const PaginaRegistro({super.key});
 
-  void Registro(){
-    final ServicioAuth servicioAuth = ServicioAuth();
+  void Registro(BuildContext context, String email, String password, String confPassword){
 
-    servicioAuth.registroConEmailyPassword("email1@email.com", "123456");
+    if(password.isEmpty || email.isEmpty){
+      return;
+    }
+
+    if(password != confPassword){
+      return;
+    }
+
+    if(password.length < 6){
+      return;
+    }
+
+    try {
+      ServicioAuth().registroConEmailyPassword(email, password);
+    } catch (e) {
+      showDialog(context: context, builder: (context) => AlertDialog(
+        title: const Text("Error"),
+        content: Text(e.toString()),
+      ));
+    }
   }
 
   @override
@@ -87,7 +105,7 @@ class PaginaRegistro extends StatelessWidget {
                 //TextField Email
                 TextFieldAuth(
                   controller: tecEmail,
-                  obscureText: true,
+                  obscureText: false,
                   hintText: "Introduce tu Email...",
                 ),
             
@@ -95,7 +113,7 @@ class PaginaRegistro extends StatelessWidget {
                 TextFieldAuth(
                   controller: tecPassword,
                   obscureText: true,
-                  hintText: "Introduce tu contraseña",
+                  hintText: "Introduce tu contraseña... (6 caracteres min.)",
                 ),
             
                 //TextField confirmar Password
@@ -139,7 +157,7 @@ class PaginaRegistro extends StatelessWidget {
                   padding: const EdgeInsets.all(15.0),
                   child: BotonAuth(
                     texto: "Registrarse",
-                    onTap: Registro
+                    onTap: () => Registro(context, tecEmail.text, tecPassword.text, tecConfPass.text),
                   ),
                 ),
 
