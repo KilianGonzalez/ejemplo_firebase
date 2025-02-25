@@ -1,4 +1,6 @@
+import 'package:ejemplo_firebase/auth/portal_auth.dart';
 import 'package:ejemplo_firebase/firebase_options.dart';
+import 'package:ejemplo_firebase/paginas/pagina_login.dart';
 import 'package:ejemplo_firebase/paginas/pagina_registro.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const PaginaRegistro(),
+      home: const PortalAuth(),
     );
   }
 }

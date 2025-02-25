@@ -1,28 +1,21 @@
 import 'package:ejemplo_firebase/auth/servicio_auth.dart';
 import 'package:ejemplo_firebase/componentes/boton_auth.dart';
 import 'package:ejemplo_firebase/componentes/text_field_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class PaginaRegistro extends StatelessWidget {
+class PaginaLogin extends StatelessWidget {
 
   final Function()? hacerClick;
 
-  const PaginaRegistro({
+  const PaginaLogin({
     super.key,
-    required this.hacerClick,
+    required this.hacerClick,  
   });
 
-  void Registro(BuildContext context, String email, String password, String confPassword) async {
+  void Login(BuildContext context, String email, String password) async {
 
-    if(password.isEmpty || email.isEmpty){
-      return;
-    }
-
-    if(password != confPassword){
-      return;
-    }
-
-    String? error = await ServicioAuth().registroConEmailyPassword(email, password);
+    String? error = await ServicioAuth().loginConEmailyPassword(email, password);
 
     if(error != null) {
       showDialog(context: context, builder: (context) => AlertDialog(
@@ -31,7 +24,7 @@ class PaginaRegistro extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         title: const Text("Error"),
-        content: Text("Email y/o contraseña incorrectos"),
+        content: const Text("Email y/o contraseña incorrectos"),
       ));
     }
   }
@@ -40,7 +33,6 @@ class PaginaRegistro extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController tecEmail = TextEditingController();
     final TextEditingController tecPassword = TextEditingController();
-    final TextEditingController tecConfPass = TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.orange[200],
@@ -64,7 +56,7 @@ class PaginaRegistro extends StatelessWidget {
             
                 //Frase
                 Text(
-                  "Crea una cuenta nueva!",
+                  "Bienvenido/a de nuevo",
                   style: TextStyle(
                     color: Colors.pink[300],
                     fontSize: 18,
@@ -91,7 +83,7 @@ class PaginaRegistro extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Text(
-                          "Registrate",
+                          "Inicia sesión",
                           style: TextStyle(
                             color: Colors.pink[300],
                           ),
@@ -119,16 +111,9 @@ class PaginaRegistro extends StatelessWidget {
                 TextFieldAuth(
                   controller: tecPassword,
                   obscureText: true,
-                  hintText: "Introduce tu contraseña... (6 caracteres min.)",
+                  hintText: "Introduce tu contraseña...",
                 ),
-            
-                //TextField confirmar Password
-                TextFieldAuth(
-                  controller: tecConfPass,
-                  obscureText: true,
-                  hintText: "Confirma la contraseña",
-                ),
-          
+
                 const SizedBox(
                   height: 10,
                 ),
@@ -138,7 +123,7 @@ class PaginaRegistro extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Ya eres miembro?",
+                      "No eres miembro?",
                       style: TextStyle(
                         color: Color.fromARGB(255, 222, 100, 0),
                       ),
@@ -147,7 +132,7 @@ class PaginaRegistro extends StatelessWidget {
                     GestureDetector(
                       onTap: hacerClick,
                       child: Text(
-                        "Inicia sesión",
+                        "Registrate",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.pink[300],
@@ -163,8 +148,8 @@ class PaginaRegistro extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: BotonAuth(
-                    texto: "Registrarse",
-                    onTap: () => Registro(context, tecEmail.text, tecPassword.text, tecConfPass.text),
+                    texto: "Login",
+                    onTap: () => Login(context, tecEmail.text, tecPassword.text),
                   ),
                 ),
               ],
