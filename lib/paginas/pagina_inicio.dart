@@ -1,6 +1,7 @@
 import 'package:ejemplo_firebase/auth/servicio_auth.dart';
 import 'package:ejemplo_firebase/chat/servicio_chat.dart';
 import 'package:ejemplo_firebase/componentes/item_usuario.dart';
+import 'package:ejemplo_firebase/paginas/pagina_chat.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
-        title: const Text("Página de inicio"),
+        title: Text("User: " + ServicioAuth().getUsuarioActual()!.email!),
         actions: [
           IconButton(
             onPressed: () {
@@ -53,8 +54,19 @@ class _PaginaInicioState extends State<PaginaInicio> {
 
   Widget _construirItemUsuario(Map<String, dynamic> datosUsuario) {
 
+    if(datosUsuario["email"] == ServicioAuth().getUsuarioActual()!.email) {
+      
+      return Container();
+    } 
+
     return ItemUsuario(
-      emailUsuario: datosUsuario["email"]
+      emailUsuario: datosUsuario["email"],
+      onTap: () {
+        Navigator.push(
+          context, 
+          MaterialPageRoute(builder: (context) => const PaginaChat()),
+        );
+      },
     );
   }
 }

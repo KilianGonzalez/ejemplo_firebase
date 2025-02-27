@@ -5,6 +5,11 @@ class ServicioAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  //Usuario actual
+  User? getUsuarioActual() {
+    return _auth.currentUser;
+  }
+
   //Hacer logout
   Future<void> logout() async {
     
