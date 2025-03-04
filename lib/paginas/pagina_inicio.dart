@@ -64,7 +64,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
       onTap: () {
         Navigator.push(
           context, 
-          MaterialPageRoute(builder: (context) => const PaginaChat()),
+          MaterialPageRoute(builder: (context) => PaginaChat(idReceptor: datosUsuario["uid"])),
         );
       },
     );

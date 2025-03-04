@@ -1,18 +1,33 @@
+import 'package:ejemplo_firebase/chat/servicio_chat.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class PaginaChat extends StatefulWidget {
-  const PaginaChat({super.key});
+
+  final String idReceptor;
+
+  const PaginaChat({
+    super.key,
+    required this.idReceptor,
+  });
 
   @override
   State<PaginaChat> createState() => _PaginaChatState();
 }
 
 class _PaginaChatState extends State<PaginaChat> {
+
+  final TextEditingController tecMensaje = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.pink[100],
+      appBar: AppBar(
+        backgroundColor: Colors.pink[300],
+        title: const Text("Sala Chat")
+      ),
+
       body: Column(
         children: [
 
@@ -27,10 +42,47 @@ class _PaginaChatState extends State<PaginaChat> {
   }
   
   Widget _crearZonaMostrarMensajes() {
-    return Text("1");
+    return Expanded(child: Text("1"));
   }
   
   Widget _crearZonaEscribirMensajes() {
-    return Text("2");
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Expanded(child: 
+            TextField(
+              controller: tecMensaje,
+              decoration: InputDecoration(
+                hintText: "Escribe tu mensaje...",
+                filled: true,
+                fillColor: Colors.teal[50],
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 7),
+      
+          IconButton(
+            onPressed: enviarMensaje, 
+            icon: const Icon(Icons.send, color: Colors.indigoAccent),
+            style: const ButtonStyle(
+              backgroundColor: null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void enviarMensaje() {
+    if (tecMensaje.text.isNotEmpty){
+      ServicioChat().enviarMensaje(
+        widget.idReceptor, 
+        tecMensaje.text
+      );
+
+      tecMensaje.clear();
+    }
   }
 }

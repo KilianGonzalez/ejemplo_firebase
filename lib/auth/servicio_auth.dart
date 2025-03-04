@@ -25,6 +25,21 @@ class ServicioAuth {
         password: password
       );
 
+      // Comprobar si el usuario ya está registrado en Firestore (en FirebaseAuth, si hemos llegado hasta aqui, ya sabemos que está). Si no estuviera dado de alta
+      // le damos de alta (en Firestore). Hecho por si se diera de alta un usuario directamente desde al consola de Firebase y no a través de nuestra App.
+
+      final QuerySnapshot querySnapshot = await _firestore.collection("Usuarios").where("email", isEqualTo: email).get();
+
+      if (querySnapshot.docs.isEmpty){
+
+        _firestore.collection("Usuarios").doc(credencialUsuario.user!.uid).set({
+        "uid": credencialUsuario.user!.uid,
+        "email": email,
+        "nombre": "",
+        });
+
+      }
+      
       return null;
 
     } on FirebaseAuthException catch (e) {

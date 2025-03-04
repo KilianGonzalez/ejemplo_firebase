@@ -164,7 +164,12 @@ class PaginaRegistro extends StatelessWidget {
                   padding: const EdgeInsets.all(15.0),
                   child: BotonAuth(
                     texto: "Registrarse",
-                    onTap: () => Registro(context, tecEmail.text, tecPassword.text, tecConfPass.text),
+                    onTap: () => Registro(
+                      context, 
+                      tecEmail.text, 
+                      tecPassword.text, 
+                      tecConfPass.text
+                    ),
                   ),
                 ),
               ],
