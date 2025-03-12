@@ -23,10 +23,18 @@ class _PaginaChatState extends State<PaginaChat> {
   final TextEditingController tecMensaje = TextEditingController();
   final ScrollController scControlador = ScrollController();
 
+  FocusNode tecladoMovil = FocusNode();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    tecladoMovil.addListener(() {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        hacerScrollAbajo();
+      });
+    });
 
     Future.delayed(const Duration(milliseconds: 500), () {
         hacerScrollAbajo();
