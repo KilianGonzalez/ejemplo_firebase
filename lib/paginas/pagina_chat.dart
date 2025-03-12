@@ -21,6 +21,25 @@ class PaginaChat extends StatefulWidget {
 class _PaginaChatState extends State<PaginaChat> {
 
   final TextEditingController tecMensaje = TextEditingController();
+  final ScrollController scControlador = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+        hacerScrollAbajo();
+    });
+  }
+
+  void hacerScrollAbajo() {
+    scControlador.animateTo(
+      scControlador.position.maxScrollExtent + 100, 
+      duration: const Duration(seconds: 1), 
+      curve: Curves.fastOutSlowIn
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +79,9 @@ class _PaginaChatState extends State<PaginaChat> {
             return const Text("Cargando mensajes...");
           }
 
-          //retornar mensajes
+          //devolver mensajes
           return ListView(
+            controller: scControlador,
             children: snapshot.data!.docs.map((document) => _construirItemMensaje(document)).toList(),
           );
         },
@@ -72,7 +92,10 @@ class _PaginaChatState extends State<PaginaChat> {
   Widget _construirItemMensaje(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
 
-    return BurbujaMensaje(mensaje: data["mensaje"]);
+    return BurbujaMensaje(
+      mensaje: data["mensaje"], 
+      idAutor: data["idAutor"]
+    );
   }
   
   Widget _crearZonaEscribirMensajes() {
@@ -113,6 +136,10 @@ class _PaginaChatState extends State<PaginaChat> {
       );
 
       tecMensaje.clear();
+
+      Future.delayed(const Duration(milliseconds: 50), () {
+        hacerScrollAbajo();
+      });
     }
   }
 }
