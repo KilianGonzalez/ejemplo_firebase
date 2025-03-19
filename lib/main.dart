@@ -9,10 +9,19 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+  if (Firebase.apps.isEmpty) {
+    
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    } catch (e) {
+      print("Error iniciando Firebase");
+    }
+  } else {
+    print("Error, Firebase ya esta iniciado");
+  }
+  
   runApp(const MainApp());
 }
 

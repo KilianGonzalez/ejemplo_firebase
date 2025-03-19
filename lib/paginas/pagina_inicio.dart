@@ -1,6 +1,7 @@
 import 'package:ejemplo_firebase/auth/servicio_auth.dart';
 import 'package:ejemplo_firebase/chat/servicio_chat.dart';
 import 'package:ejemplo_firebase/componentes/item_usuario.dart';
+import 'package:ejemplo_firebase/paginas/editar_datos_usuario.dart';
 import 'package:ejemplo_firebase/paginas/pagina_chat.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,17 @@ class _PaginaInicioState extends State<PaginaInicio> {
         backgroundColor: Colors.pink[300],
         title: Text("User: " + ServicioAuth().getUsuarioActual()!.email!),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => const EditarDatosUsuario()
+                )
+              );
+            }, 
+            icon: const Icon(Icons.person)
+          ),
           IconButton(
             onPressed: () {
               ServicioAuth().logout();
