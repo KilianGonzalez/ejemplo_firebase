@@ -1,3 +1,8 @@
+
+
+import 'dart:io';
+
+import 'package:ejemplo_firebase/auth/servicio_auth.dart';
 import 'package:ejemplo_firebase/mongodb/db_conf.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -43,15 +48,91 @@ class _EditarDatosUsuarioState extends State<EditarDatosUsuario> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
-        title: Text("Editar datos usuario"),
+        title: const Text("Editar datos usuario"),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           children: [
-            Text("Edita tus datos:")
+            const Text("Edita tus datos:"),
+
+            //Añadimos la imagen o un texto
+            _imagenEnBytes != null ? Image.memory(_imagenEnBytes!, height: 200,) : const Text("No se ha seleccionado ninguna imagen"),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                _subirImagen();
+              }, 
+              child: const Text("Subir imagen")
+            ),
+
+            ElevatedButton(
+              onPressed: () {
+                _recuperarImagen();
+              }, 
+              child: const Text("Recuperar imagen")
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future _subirImagen() async {
+
+    final imagenseleccionada = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    //Comprobar si ha encontrado una imagen
+    if (imagenseleccionada != null) {
+
+      //Pasamos la imagen a bytes para poder guardarla
+      final bytesImagen = await File(imagenseleccionada.path).readAsBytes();
+
+      //Pasamos los bytes al formato que a MongoDB le va bien
+      final datosBinarios = mongodb.BsonBinary.from(bytesImagen);
+
+      //Nos situamos en esta colección, si no está creada, se creará automaticamente
+      final collection = _db!.collection("imagenes_perfiles");
+
+      await collection.replaceOne(
+        {
+          "id_usuario_firebase": ServicioAuth().getUsuarioActual()!.uid
+        }
+        ,
+        {
+          "id_usuario_firebase": ServicioAuth().getUsuarioActual()!.uid,
+          "nombre_foto": "foto_perfil",
+          "imagen": datosBinarios,
+          "fecha_subida": DateTime.now()
+        },
+        //Si no encuentra el documento, lo crea
+        upsert: true
+      );
+      print("Imagen puesta");
+    }
+  }
+
+  Future <void> _recuperarImagen() async {
+
+    try {
+      //Nos conectamos con la collection que queremos
+      final collection = _db!.collection("imagenes_perfiles");
+
+      //Buscar el documento deseado
+      final doc = await collection.findOne({"id_usuario_firebase": ServicioAuth().getUsuarioActual()!.uid});
+
+      //Hay que cambiar el formato de Bson a MongoDB
+      if (doc != null && doc["imagen"] != null) {
+        final imagenBson = doc ["imagen"] as mongodb.BsonBinary;
+        setState(() {
+          _imagenEnBytes = imagenBson.byteList;
+        });
+      } else {
+        print("Error encontrando la imagen en el documento");
+      }
+    } catch (e) {
+        print("Error intentando recuperar el documento");
+    }
   }
 }
