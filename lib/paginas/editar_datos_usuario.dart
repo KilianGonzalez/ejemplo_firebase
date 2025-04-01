@@ -73,6 +73,24 @@ class _EditarDatosUsuarioState extends State<EditarDatosUsuario> {
               }, 
               child: const Text("Recuperar imagen")
             ),
+
+            const SizedBox(height: 20),
+
+            Text("---------------------------------------------------------------------------------------------------------",
+              style: TextStyle(
+                color: Colors.pink[300],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Text(ServicioAuth().getUsuarioActual()!.email!, 
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+
+            
           ],
         ),
       ),

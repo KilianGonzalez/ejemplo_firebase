@@ -19,7 +19,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
-        title: Text("User: " + ServicioAuth().getUsuarioActual()!.email!),
+        title: Text("Pagina de Inicio"),
         actions: [
           IconButton(
             onPressed: () {

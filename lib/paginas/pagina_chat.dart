@@ -102,7 +102,8 @@ class _PaginaChatState extends State<PaginaChat> {
 
     return BurbujaMensaje(
       mensaje: data["mensaje"], 
-      idAutor: data["idAutor"]
+      idAutor: data["idAutor"],
+      horaMensaje: data["timestamp"],
     );
   }
   
