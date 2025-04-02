@@ -35,13 +35,28 @@ class _EditarDatosUsuarioState extends State<EditarDatosUsuario> {
     super.initState();
 
     _conectarMongoDB().then((_) => print("Conectados con MongoDB")); //si no queremos usar ningun valor, ponemos un _ para que no de error
+    cargarNombreUsuario();
   }
+
+  void cargarNombreUsuario() async {
+    try {
+      String? nombre = await ServicioAuth().nombreUsuarioActual();
+      setState(() {
+        nombreUsuario.text = nombre ?? "";
+      });
+    } catch (e) {
+      print("Error cargando el nombre: $e");
+    }
+  }
+
 
   Future _conectarMongoDB() async {
     _db = await mongodb.Db.create(DBConf().connectionString);
 
     await _db!.open(); //abrir la conexión con mongodb
   }
+
+  final TextEditingController nombreUsuario = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -90,11 +105,26 @@ class _EditarDatosUsuarioState extends State<EditarDatosUsuario> {
               ),
             ),
 
-            
+            TextField(
+              controller: nombreUsuario,
+              decoration: InputDecoration(
+                hintText: "Escribe tu nombre...",
+              ),
+            )
           ],
         ),
       ),
     );
+  }
+
+  Future <void> _cargarNombre() async {
+    final nombreUsuario = ServicioAuth().getUsuarioActual();
+
+    if (nombreUsuario == null) {
+      return;
+    }
+
+
   }
 
   Future _subirImagen() async {

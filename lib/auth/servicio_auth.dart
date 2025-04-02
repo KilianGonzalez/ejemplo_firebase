@@ -10,6 +10,14 @@ class ServicioAuth {
     return _auth.currentUser;
   }
 
+  Future<String?> nombreUsuarioActual() async {
+
+    final QuerySnapshot querySnapshot = await _firestore.collection("Usuarios").where("email", isEqualTo: _auth.currentUser!.email).get();
+
+    return querySnapshot.docs.first["nombre"] as String?;
+
+  }
+
   //Hacer logout
   Future<void> logout() async {
     
