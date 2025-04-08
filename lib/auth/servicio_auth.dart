@@ -15,7 +15,6 @@ class ServicioAuth {
     final QuerySnapshot querySnapshot = await _firestore.collection("Usuarios").where("email", isEqualTo: _auth.currentUser!.email).get();
 
     return querySnapshot.docs.first["nombre"] as String?;
-
   }
 
   //Hacer logout

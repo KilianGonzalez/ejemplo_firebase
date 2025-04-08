@@ -22,6 +22,7 @@ class _PaginaChatState extends State<PaginaChat> {
 
   final TextEditingController tecMensaje = TextEditingController();
   final ScrollController scControlador = ScrollController();
+  String? nombreReceptor;
 
   FocusNode tecladoMovil = FocusNode();
 
@@ -39,6 +40,8 @@ class _PaginaChatState extends State<PaginaChat> {
     Future.delayed(const Duration(milliseconds: 500), () {
         hacerScrollAbajo();
     });
+
+    cargarNombreReceptor();
   }
 
   void hacerScrollAbajo() {
@@ -49,13 +52,41 @@ class _PaginaChatState extends State<PaginaChat> {
     );
   }
 
+  void cargarNombreReceptor() async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection("Usuarios").doc(widget.idReceptor).get();
+      if (doc.exists) {
+        final nombre = doc["nombre"];
+        if (nombre != null && nombre.isNotEmpty) {
+          setState(() {
+            nombreReceptor = nombre;
+          });
+        } else {
+          final email = doc["email"];
+          setState(() {
+            nombreReceptor = email;
+          });
+        }
+      } else {
+        setState(() {
+          nombreReceptor = "Usuario no encontrado";
+        });
+      }
+    } catch (e) {
+      print("Error al cargar nombre: $e");
+      setState(() {
+        nombreReceptor = "Error al cargar nombre";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.pink[100],
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
-        title: const Text("Sala Chat")
+        title: Text(nombreReceptor ?? "Cargando..."),
       ),
 
       body: Column(

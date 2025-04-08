@@ -2,8 +2,10 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ejemplo_firebase/auth/servicio_auth.dart';
 import 'package:ejemplo_firebase/mongodb/db_conf.dart';
+import 'package:ejemplo_firebase/paginas/pagina_inicio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -107,9 +109,19 @@ class _EditarDatosUsuarioState extends State<EditarDatosUsuario> {
 
             TextField(
               controller: nombreUsuario,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Escribe tu nombre...",
               ),
+            ),
+
+            ElevatedButton(
+              onPressed: () {
+                guardarNombreUsuario();
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(Colors.pink[300]),
+              ),
+              child: const Text("Guardar"),
             )
           ],
         ),
@@ -123,9 +135,41 @@ class _EditarDatosUsuarioState extends State<EditarDatosUsuario> {
     if (nombreUsuario == null) {
       return;
     }
-
-
   }
+
+  void guardarNombreUsuario() async {
+  final nuevoNombre = nombreUsuario.text;
+
+  if (nuevoNombre.isEmpty) {
+    return;
+  }
+
+  try {
+    final user = ServicioAuth().getUsuarioActual();
+    if (user == null) return;
+
+    final firestore = FirebaseFirestore.instance;
+    final querySnapshot = await firestore.collection("Usuarios").where("email", isEqualTo: user.email).limit(1).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final docId = querySnapshot.docs.first.id;
+      await firestore.collection("Usuarios").doc(docId).update({
+        "nombre": nuevoNombre,
+      });
+
+      Navigator.pop(
+        context
+      );
+
+      print("Nombre actualizado correctamente");
+    } else {
+      print("Usuario no encontrado");
+    }
+  } catch (e) {
+    print("Error al guardar el nombre: $e");
+  }
+}
+
 
   Future _subirImagen() async {
 
