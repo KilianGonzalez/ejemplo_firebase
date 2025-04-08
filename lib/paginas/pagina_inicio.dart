@@ -5,6 +5,7 @@ import 'package:ejemplo_firebase/paginas/editar_datos_usuario.dart';
 import 'package:ejemplo_firebase/paginas/pagina_chat.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:ejemplo_firebase/mongodb/db_conf.dart';
 
 class PaginaInicio extends StatefulWidget {
   const PaginaInicio({super.key});
@@ -71,14 +72,37 @@ class _PaginaInicioState extends State<PaginaInicio> {
       return Container();
     } 
 
-    return ItemUsuario(
-      emailUsuario: datosUsuario["email"],
-      onTap: () {
-        Navigator.push(
-          context, 
-          MaterialPageRoute(builder: (context) => PaginaChat(idReceptor: datosUsuario["uid"])),
+    return FutureBuilder<Uint8List?>(
+    future: DBConf().obtenerImagenPerfil(datosUsuario["uid"]),
+    builder: (context, snapshot) {
+      Widget icono;
+
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        icono = const Icon(Icons.person);
+      } else if (snapshot.hasData && snapshot.data != null) {
+        icono = Image.memory(
+          snapshot.data!,
+          width: 40,
+          height: 40,
+          fit: BoxFit.cover,
         );
-      },
-    );
+      } else {
+        icono = const Icon(Icons.person);
+      }
+
+      return ListTile(
+        leading: icono,
+        title: Text(datosUsuario["email"]),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PaginaChat(idReceptor: datosUsuario["uid"]),
+            ),
+          );
+        },
+      );
+    },
+  );
   }
 }
